@@ -1,0 +1,128 @@
+{
+  "name": "codex-gateway-launcher",
+  "displayName": "Codex Gateway Launcher",
+  "description": "Use the official Codex VS Code extension with your own OpenAI-compatible gateway (e.g. Bifrost) in a separate VS Code instance. The official Codex / ChatGPT login stays untouched.",
+  "version": "0.3.0",
+  "publisher": "nyaaorick",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "main": "./extension.js",
+  "activationEvents": [],
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "codexGateway",
+          "title": "网关 Codex",
+          "icon": "icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "codexGateway": [
+        {
+          "id": "codexGateway.launcher",
+          "name": "网关 Codex"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "codexGateway.launcher",
+        "when": "codexGateway.inside",
+        "contents": "当前窗口已经是网关实例,Codex 插件走网关。\n[测试网关连接](command:codexGateway.test)"
+      },
+      {
+        "view": "codexGateway.launcher",
+        "when": "!codexGateway.inside && !codexGateway.hasUrl",
+        "contents": "第一步:填写你的网关地址(OpenAI 兼容,以 /v1 结尾)。\n[填写网关地址](command:codexGateway.setUrl)"
+      },
+      {
+        "view": "codexGateway.launcher",
+        "when": "!codexGateway.inside && codexGateway.hasUrl && !codexGateway.hasKey",
+        "contents": "第二步:填写网关 key。\n[填写网关 key](command:codexGateway.setKey)\n[修改网关地址](command:codexGateway.setUrl)\nkey 保存在 VS Code 的密钥存储里,不会写进任何文件。"
+      },
+      {
+        "view": "codexGateway.launcher",
+        "when": "!codexGateway.inside && codexGateway.hasUrl && codexGateway.hasKey",
+        "contents": "点击侧边栏图标即可打开走网关的独立 VS Code 窗口。\n[打开当前文件夹](command:codexGateway.openCurrent)\n[选择文件夹打开…](command:codexGateway.openPick)\n[打开空窗口](command:codexGateway.openEmpty)\n[测试网关连接](command:codexGateway.test)\n[更换网关 key](command:codexGateway.setKey)\n[修改网关地址](command:codexGateway.setUrl)\n官方 Codex 插件与 ChatGPT 登录不受影响。"
+      }
+    ],
+    "commands": [
+      {
+        "command": "codexGateway.openCurrent",
+        "title": "网关 Codex: 用网关实例打开当前文件夹"
+      },
+      {
+        "command": "codexGateway.openPick",
+        "title": "网关 Codex: 选择文件夹并用网关实例打开"
+      },
+      {
+        "command": "codexGateway.openEmpty",
+        "title": "网关 Codex: 打开空的网关实例窗口"
+      },
+      {
+        "command": "codexGateway.setUrl",
+        "title": "网关 Codex: 填写 / 修改网关地址"
+      },
+      {
+        "command": "codexGateway.setKey",
+        "title": "网关 Codex: 填写 / 更换网关 key"
+      },
+      {
+        "command": "codexGateway.clearKey",
+        "title": "网关 Codex: 删除已保存的网关 key"
+      },
+      {
+        "command": "codexGateway.test",
+        "title": "网关 Codex: 测试网关连接"
+      },
+      {
+        "command": "codexGateway.writeConfig",
+        "title": "网关 Codex: 重新生成网关实例的 Codex 配置"
+      },
+      {
+        "command": "codexGateway.openSettings",
+        "title": "网关 Codex: 打开设置"
+      }
+    ],
+    "configuration": {
+      "title": "Codex Gateway Launcher",
+      "properties": {
+        "codexGateway.baseUrl": {
+          "type": "string",
+          "default": "",
+          "scope": "application",
+          "description": "网关的 OpenAI 兼容地址,以 /v1 结尾,例如 https://gateway.example.com/v1。"
+        },
+        "codexGateway.defaultModel": {
+          "type": "string",
+          "default": "gpt-6.1-sol",
+          "scope": "application",
+          "description": "首次生成配置时写入的默认模型。之后在 Codex 界面里切换即可。"
+        },
+        "codexGateway.codexHome": {
+          "type": "string",
+          "default": "~/.codex-gateway",
+          "scope": "application",
+          "description": "网关实例使用的 Codex 配置目录(与官方的 ~/.codex 分开)。VS Code 实例数据放在其中的 vscode-data。"
+        },
+        "codexGateway.launchOnIconClick": {
+          "type": "boolean",
+          "default": true,
+          "scope": "application",
+          "description": "已填写 key 时,点击活动栏图标立即打开网关实例并切回资源管理器。关闭后只显示按钮面板。"
+        }
+      }
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nyaaorick/codex-gateway-launcher.git"
+  }
+}
